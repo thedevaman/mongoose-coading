@@ -1,26 +1,30 @@
 import express from 'express'
 import mongoose from 'mongoose' 
+import { userSchema } from './schema/user.js'
 const app = express()
 app.listen(8000,()=>console.log("Server is running"))
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 
-mongoose.connect("mongodb://localhost:27017/coading_ott")
+mongoose.connect("mongodb://localhost:27017/commpany")
 .then(()=>console.log("Db Connected"))
 .catch(()=>console.log("connection failed"))
 
-app.get("/users",(req,res)=>{
+app.get("/users",async (req,res)=>{
     try{
-        
-      res.json({message:'get request initiated'})
+       const users = await userSchema.find()
+      res.json({users})
     }catch(err){
       res.status(500).json({message:err.message})
     }
    
 })
 
-app.post("/users",(req,res)=>{
+app.post("/users", async (req,res)=>{
     try{
-        dada
-     res.json({message:'post request initiated'})
+        const payload = req.body
+       const users = await userSchema.create(payload)
+     res.json({message:'Data Inserted Succesfully'})
     }catch(err){
      res.status(500).json({message:err.message})
     }
